@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 OS_TYPE="unknown"
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     OS_TYPE="linux"

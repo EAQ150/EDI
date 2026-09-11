@@ -12,7 +12,7 @@ from PyQt6.QtCore import Qt, QPoint
 class EdiVfsCompilerApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("EDI Maker")
+        self.setWindowTitle("EDI Compiler")
         self.setGeometry(100, 100, 700, 600)
         self.init_ui()
 
@@ -25,9 +25,9 @@ class EdiVfsCompilerApp(QMainWindow):
 
         tools_layout = QHBoxLayout()
         self.add_folder_btn = QPushButton("Add Folder")
-        self.add_folder_btn.clicked.connect(self.add_real_folder)
+        self.add_folder_btn.clicked.connect(self.add_folder)
         self.add_file_btn = QPushButton("Add File...")
-        self.add_file_btn.clicked.connect(self.add_real_files)
+        self.add_file_btn.clicked.connect(self.add_files)
         self.create_dir_btn = QPushButton("Create Folder")
         self.create_dir_btn.clicked.connect(self.create_virtual_folder)
         
@@ -64,7 +64,7 @@ class EdiVfsCompilerApp(QMainWindow):
         self.generate_btn.setFixedHeight(45)
         main_layout.addWidget(self.generate_btn)
 
-    def add_real_folder(self):
+    def add_folder(self):
         selected = QFileDialog.getExistingDirectory(self, "Select Folder to Add")
         if not selected:
             return
@@ -111,7 +111,7 @@ class EdiVfsCompilerApp(QMainWindow):
                 
         self.files_tree.expandAll()
 
-    def add_real_files(self):
+    def add_files(self):
         files, _ = QFileDialog.getOpenFileNames(self, "Select File(s) to Add")
         if not files:
             return

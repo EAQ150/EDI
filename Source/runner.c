@@ -145,7 +145,8 @@ int check_ram_safety(unsigned long total_size, int use_ram) {
         }
 	}
 	if (available_mb > (needed_mb+1000000000)){
-		fprintf(stderr, "[EDI] WARNING: What could possibly be needed for 1000 TERABYTES?\n")
+		fprintf(stderr, "[EDI] WARNING: What could possibly be needed for 1000 TERABYTES?\n");
+		fprintf("[EDI] Get help.");
     }
 
     return 1;

@@ -19,4 +19,5 @@ Using the runner
 > This may be used or packaged in apps with given credit to contributors
 > 
 > You are free to contribute to this is you believe you can help further the project.
-> 
+
+To build your own version, all you have to do is download one of the versions you'd like to build, edit it, and then compile the C, and zip it up. You may need to chnge install.sh if you intend on adding new files or adding compatibility for other operating systems.

@@ -111,7 +111,7 @@ void print_usage(const char *program) {
     printf("Usage: %s [options] <path/to/game.edi>\n", program);
     printf("Options:\n");
     printf("  --ram true|false       Load image into RAM instead of a directory in /tmp (default: false)\n");
-    printf("  --buffer SIZE          Buffer size in KB (default: 64, and please note that you DON'T NEED 100MB unless you play COD)\n");
+    printf("  --buffer SIZE          Buffer size in KB (default: 64)\n");
     printf("  --runtimedir PATH         Custom runtimedir directory (default: /tmp/edi_runtimedir/)\n");
 }
 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
     char magic[4];
     fread(magic, 1, 4, edi);
     if (strncmp(magic, "EDI!", 4) != 0) {
-        printf("[EDI] Not a valid .edi image.\n");
+        printf("[EDI] Not a valid EDI image.\n");
         fclose(edi);
         return 1;
     }
@@ -283,7 +283,7 @@ int main(int argc, char *argv[]) {
     unsigned char *buffer = malloc(opts.buffer_size);
     for (unsigned int i = 0; i < file_count; i++) {
         if (!is_path_safe(final_runtimedir, file_names[i])) {
-            fprintf(stderr, "[EDI] SECURITY: Path traversal attempt detected: %s\n", file_names[i]);
+            fprintf(stderr, "[EDI] SECURITY: Path usage detected: %s\n", file_names[i]);
             continue;
         }
 

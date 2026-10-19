@@ -4,4 +4,4 @@ Latest updates bring security and safety features to the EDI tools, and older de
 
 ## Reporting a Vulnerability
 
-If you have any issues regarding security or a vulnerability, please put it into Issues on the Github
+If you have any issues regarding security or a vulnerability, please put it into Issues on the Github.

@@ -36,13 +36,13 @@ class EdiVfsCompilerApp(QMainWindow):
         tools_layout.addWidget(self.create_dir_btn)
         main_layout.addLayout(tools_layout)
 
-        exec_label = QLabel("Path to executed file (Inside EDI):")
+        exec_label = QLabel("Path to executed file (Relative to the inside of the EDI):")
         exec_label.setStyleSheet("font-weight: bold; font-size: 13px;")
         main_layout.addWidget(exec_label)
         self.entry_le = QLineEdit("bin/main.bin")
         main_layout.addWidget(self.entry_le)
 
-        files_label = QLabel("EDI (Right-click items to manage / set entry point):")
+        files_label = QLabel("EDI (Right click to open context menu):")
         files_label.setStyleSheet("font-weight: bold; font-size: 13px;")
         main_layout.addWidget(files_label)
 

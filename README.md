@@ -36,4 +36,4 @@ To build your own version, all you have to do is download one of the versions yo
 
 If you do build your own version, please give credit, as this took a while to make.\
 
-![Static Badge](https://img.shields.io/badge/Development-Active-brightgreen) ![Static Badge](https://img.shields.io/badge/Status-V1.0.3-blue) ![Static Badge](https://img.shields.io/badge/Language-C-purple) ![Static Badge](https://img.shields.io/badge/Stars-1-yellow)
+![Static Badge](https://img.shields.io/badge/Development-Active-brightgreen) ![Static Badge](https://img.shields.io/badge/Status-Slowed_Development-orange) ![Static Badge](https://img.shields.io/badge/Version-V1.0.3-blue) ![Static Badge](https://img.shields.io/badge/Language-C-purple) ![Static Badge](https://img.shields.io/badge/Stars-1-yellow)

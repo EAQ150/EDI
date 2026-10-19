@@ -34,4 +34,6 @@ EDI is short for Executable Disc Image, and is meant to be the executable versio
 <h2>Custom Builds</h2>
 To build your own version, all you have to do is download one of the versions you'd like to build, edit it, and then compile the C, and zip it up. You may need to change install.sh if you intend on adding new files or adding compatibility for other operating systems.
 
-If you do build your own version, please give credit, as this took a while to make.
+If you do build your own version, please give credit, as this took a while to make.\
+
+![Static Badge](https://img.shields.io/badge/Development-Active-brightgreen) ![Static Badge](https://img.shields.io/badge/Status-V1.0.3-blue) ![Static Badge](https://img.shields.io/badge/Language-C-purple) ![Static Badge](https://img.shields.io/badge/Stars-1-yellow)

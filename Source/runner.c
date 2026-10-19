@@ -22,7 +22,7 @@ typedef struct {
     int use_ram;
     unsigned int buffer_size;
     const char *edi_path;
-    const char *sandbox_path;
+    const char *runtimedir_path;
 } Options;
 
 DirCache dir_cache = {{}, 0};
@@ -43,18 +43,18 @@ void cache_dir(const char *dir) {
     }
 }
 
-int is_path_safe(const char *sandbox, const char *file_path) {
+int is_path_safe(const char *runtimedir, const char *file_path) {
     char full_path[MAX_PATH_LEN];
-    char real_sandbox[MAX_PATH_LEN];
+    char real_runtimedir[MAX_PATH_LEN];
     char real_full_path[MAX_PATH_LEN];
 
-    if (strlen(sandbox) + strlen(file_path) >= MAX_PATH_LEN - 1) {
+    if (strlen(runtimedir) + strlen(file_path) >= MAX_PATH_LEN - 1) {
         return 0;
     }
 
-    snprintf(full_path, sizeof(full_path), "%s%s", sandbox, file_path);
+    snprintf(full_path, sizeof(full_path), "%s%s", runtimedir, file_path);
 
-    if (realpath(sandbox, real_sandbox) == NULL) {
+    if (realpath(runtimedir, real_runtimedir) == NULL) {
         return 0;
     }
 
@@ -62,18 +62,18 @@ int is_path_safe(const char *sandbox, const char *file_path) {
         return 1;
     }
 
-    return strncmp(real_full_path, real_sandbox, strlen(real_sandbox)) == 0;
+    return strncmp(real_full_path, real_runtimedir, strlen(real_runtimedir)) == 0;
 }
 
-void create_parent_directories(const char *base_sandbox, const char *relative_file_path) {
+void create_parent_directories(const char *base_runtimedir, const char *relative_file_path) {
     char full_path[MAX_PATH_LEN];
-    snprintf(full_path, sizeof(full_path), "%s%s", base_sandbox, relative_file_path);
+    snprintf(full_path, sizeof(full_path), "%s%s", base_runtimedir, relative_file_path);
 
     char tmp[MAX_PATH_LEN];
     snprintf(tmp, sizeof(tmp), "%s", full_path);
     size_t len = strlen(tmp);
 
-    for (size_t i = strlen(base_sandbox); i < len; i++) {
+    for (size_t i = strlen(base_runtimedir); i < len; i++) {
         if (tmp[i] == '/') {
             tmp[i] = '\0';
             if (!dir_cached(tmp)) {
@@ -112,7 +112,7 @@ void print_usage(const char *program) {
     printf("Options:\n");
     printf("  --ram true|false       Load image into RAM instead of a directory in /tmp (default: false)\n");
     printf("  --buffer SIZE          Buffer size in KB (default: 64, and please note that you DON'T NEED 100MB unless you play COD)\n");
-    printf("  --sandbox PATH         Custom sandbox directory (default: /tmp/edi_sandbox/)\n");
+    printf("  --runtimedir PATH         Custom runtimedir directory (default: /tmp/edi_runtimedir/)\n");
 }
 
 int check_ram_safety(unsigned long total_size, int use_ram) {
@@ -180,12 +180,12 @@ Options parse_arguments(int argc, char *argv[]) {
             }
             opts.buffer_size = kb * 1024;
             i++;
-        } else if (strcmp(argv[i], "--sandbox") == 0) {
+        } else if (strcmp(argv[i], "--runtimedir") == 0) {
             if (i + 1 >= argc) {
-                fprintf(stderr, "[EDI] --sandbox flag requires a path\n");
+                fprintf(stderr, "[EDI] --runtimedir flag requires a path\n");
                 exit(1);
             }
-            opts.sandbox_path = argv[i + 1];
+            opts.runtimedir_path = argv[i + 1];
             i++;
         } else if (argv[i][0] != '-' && opts.edi_path == NULL) {
             opts.edi_path = argv[i];
@@ -234,20 +234,20 @@ int main(int argc, char *argv[]) {
     printf("[EDI] RAM mode: %s\n", opts.use_ram ? "enabled" : "disabled");
     printf("[EDI] Buffer size: %u KB\n", opts.buffer_size / 1024);
 
-    char final_sandbox[MAX_PATH_LEN];
-    if (opts.sandbox_path) {
-        snprintf(final_sandbox, sizeof(final_sandbox), "%s/", opts.sandbox_path);
+    char final_runtimedir[MAX_PATH_LEN];
+    if (opts.runtimedir_path) {
+        snprintf(final_runtimedir, sizeof(final_runtimedir), "%s/", opts.runtimedir_path);
     } else if (opts.use_ram) {
-        snprintf(final_sandbox, sizeof(final_sandbox), "/dev/shm/edi_sandbox_%d/", getpid());
+        snprintf(final_runtimedir, sizeof(final_runtimedir), "/dev/shm/edi_runtimedir_%d/", getpid());
         if (access("/dev/shm", F_OK) == -1) {
-            snprintf(final_sandbox, sizeof(final_sandbox), "/tmp/edi_sandbox_ram_%d/", getpid());
+            snprintf(final_runtimedir, sizeof(final_runtimedir), "/tmp/edi_runtimedir_ram_%d/", getpid());
         }
     } else {
-        snprintf(final_sandbox, sizeof(final_sandbox), "/tmp/edi_sandbox/");
+        snprintf(final_runtimedir, sizeof(final_runtimedir), "/tmp/edi_runtimedir/");
     }
 
-    mkdir(final_sandbox, 0777);
-    cache_dir(final_sandbox);
+    mkdir(final_runtimedir, 0777);
+    cache_dir(final_runtimedir);
 
     unsigned int *file_sizes = malloc(sizeof(unsigned int) * file_count);
     unsigned int *file_offsets = malloc(sizeof(unsigned int) * file_count);
@@ -282,17 +282,17 @@ int main(int argc, char *argv[]) {
 
     unsigned char *buffer = malloc(opts.buffer_size);
     for (unsigned int i = 0; i < file_count; i++) {
-        if (!is_path_safe(final_sandbox, file_names[i])) {
+        if (!is_path_safe(final_runtimedir, file_names[i])) {
             fprintf(stderr, "[EDI] SECURITY: Path traversal attempt detected: %s\n", file_names[i]);
             continue;
         }
 
-        create_parent_directories(final_sandbox, file_names[i]);
+        create_parent_directories(final_runtimedir, file_names[i]);
 
         fseek(edi, file_offsets[i], SEEK_SET);
 
         char target_file_path[MAX_PATH_LEN];
-        snprintf(target_file_path, sizeof(target_file_path), "%s%s", final_sandbox, file_names[i]);
+        snprintf(target_file_path, sizeof(target_file_path), "%s%s", final_runtimedir, file_names[i]);
 
         FILE *out = fopen(target_file_path, "wb");
         if (out) {
@@ -310,7 +310,7 @@ int main(int argc, char *argv[]) {
     fclose(edi);
 
     char entry_path[MAX_PATH_LEN];
-    snprintf(entry_path, sizeof(entry_path), "%s%s", final_sandbox, entry_point);
+    snprintf(entry_path, sizeof(entry_path), "%s%s", final_runtimedir, entry_point);
     chmod(entry_path, 0755);
 
     printf("[EDI] Running... %s\n", entry_path);
@@ -329,7 +329,7 @@ int main(int argc, char *argv[]) {
     }
 
     printf("[EDI] Cleaning up...\n");
-    nftw(final_sandbox, cleanup_callback, 64, CLEANUP_FLAGS);
+    nftw(final_runtimedir, cleanup_callback, 64, CLEANUP_FLAGS);
 
     for (unsigned int i = 0; i < file_count; i++) {
         free(file_names[i]);

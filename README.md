@@ -20,7 +20,7 @@ EDI is short for Executable Disc Image, and is meant to be the executable versio
 <li>Bundling runners</li>
 <li>Writing to discs</li>
 <br>
-
+<hr>
 > [!IMPORTANT]
 > 
 > You may not advertise this as your own
@@ -30,6 +30,12 @@ EDI is short for Executable Disc Image, and is meant to be the executable versio
 > You are free to contribute to this is you believe you can help further the project.
 >
 > THE WINDOWS INSTALL DOESN'T WORK. I ONLY REALIZED THIS WHEN I WAS GOING TO TEST AND SAW A FOLDER MISMATCH. I will make a separate download for Windows devices 10+ when it has a solid base.
+<hr>
+<br>
+<h2>Roadmap</h2>
+v1.0.4: November 5th 2026
+v1.0.5: December 1st 2026
+To be Continued...
 
 <h2>Custom Builds</h2>
 To build your own version, all you have to do is download one of the versions you'd like to build, edit it, and then compile the C, and zip it up. You may need to change install.sh if you intend on adding new files or adding compatibility for other operating systems.
